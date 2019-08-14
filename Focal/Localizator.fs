@@ -1,4 +1,4 @@
-﻿// Copyright 2019 Vorotynsky Maxim
+// Copyright 2019 Vorotynsky Maxim
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,13 +21,39 @@ type Localizator<'TKey, 'TValue> = 'TKey -> CultureInfo -> 'TValue option
 
 module Localizator =
 
+    /// function for hiliting support
+    let inline private returnL x : Localizator<_, _> = x
+
     let id : Localizator<_, _> =
         fun inp culture -> Some inp
 
     let fail : Localizator<_, _> =
         fun inp culture -> None
 
-    let map (f : 'a -> 'b) (l : Localizator<_, 'a>) : Localizator<_, 'b> =
-        fun inp culture ->
-            l inp culture
-            |> Option.map f
+    let token x : Localizator<_, _> =
+        returnL <| fun inp culture -> Some x
+
+    let bind (f : 'a -> Localizator<_, 'b>) (l : Localizator<_, 'a>) : Localizator<_, 'b> =
+        returnL <| fun inp culture ->
+            fun x -> (f x) inp culture
+            |> Option.bind
+            <| l inp culture
+
+    let map f : Localizator<_, 'a> -> Localizator<_, 'b> =
+        bind (f >> token)
+
+    let apply (fl : Localizator<_, 'a -> 'b>) (l : Localizator<_, 'a>) : Localizator<_, 'b> =
+        returnL <| fun inp culture ->
+            fun f ->
+                l inp culture
+                |> Option.map f
+            |> Option.bind
+            <| fl inp culture
+
+    let inline map2 f l1 l2 : Localizator<_, _> =
+        let (<!>) = map
+        let (<*>) = apply
+        f <!> l1 <*> l2
+
+    let combine l1 l2 =
+        map2 (fun x y -> x, y) l1 l2
