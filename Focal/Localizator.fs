@@ -22,7 +22,7 @@ type Localizator<'TKey, 'TValue> = 'TKey -> CultureInfo -> 'TValue option
 module Localizator =
 
     /// function for hiliting support
-    let inline private returnL x : Localizator<_, _> = x
+    let inline internal returnL x : Localizator<_, _> = x
 
     let id : Localizator<_, _> =
         fun inp culture -> Some inp
@@ -57,3 +57,11 @@ module Localizator =
 
     let combine l1 l2 =
         map2 (fun x y -> x, y) l1 l2
+
+    let choose (ls : Localizator<_, _> seq) : Localizator<_, _> =
+         returnL <| fun inp culture ->
+            ls
+            |> Seq.map (fun l -> l inp culture)
+            |> Seq.filter Option.isSome
+            |> Seq.tryHead
+            |> Option.flatten
