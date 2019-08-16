@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Focal", "Focal\Focal.fsproj", "{CC444FE8-C63D-48A6-90FF-508EBDEC6EF2}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Focal", "Focal\Focal.fsproj", "{CC444FE8-C63D-48A6-90FF-508EBDEC6EF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
