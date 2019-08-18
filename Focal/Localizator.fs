@@ -33,6 +33,12 @@ module Localizator =
     let token x : Localizator<_, _> =
         returnL <| fun inp culture -> Some x
 
+    let cultureDependedValue value culture : Localizator<_, _> =
+        returnL <| fun _ c -> if culture = c then Some value else None
+        
+    let cultureDepemdedFunction f culture : Localizator<_, _> =
+        returnL <| fun inp c -> if culture = c then Some (f inp) else None
+
     let bind (f : 'a -> Localizator<_, 'b>) (l : Localizator<_, 'a>) : Localizator<_, 'b> =
         returnL <| fun inp culture ->
             fun x -> (f x) inp culture
@@ -55,8 +61,11 @@ module Localizator =
         let (<*>) = apply
         f <!> l1 <*> l2
 
-    let combine l1 l2 =
-        map2 (fun x y -> x, y) l1 l2
+    let combine (l1 : Localizator<_, _>) (l2 : Localizator<_, _>) : Localizator<_, _> =
+        returnL <| fun (inp1, inp2) culture ->
+            match (l1 inp1 culture), (l2 inp2 culture) with
+            | Some r1, Some r2 -> Some (r1, r2)
+            | _ -> None               
 
     let choose (ls : Localizator<_, _> seq) : Localizator<_, _> =
          returnL <| fun inp culture ->
@@ -65,3 +74,10 @@ module Localizator =
             |> Seq.filter Option.isSome
             |> Seq.tryHead
             |> Option.flatten
+
+    let transformKey (f : 'b -> 'a) (l : Localizator<_, _>) : Localizator<_, _> =
+        f >> l
+
+    let branch l1 l2 : Localizator<_, _> =
+        combine l1 l2
+        |> transformKey (fun k -> k, k)
