@@ -14,7 +14,7 @@
 
 module Focal.ObjectLocalizator
 
-type ObjectLocalizator = Localizator<obj, obj>
+type ObjectLocalizator = SymmetricLocalizator<obj>
 
 let private objFunc (f : 'a -> 'b Option) : (obj -> obj option) =
     fun arg ->
