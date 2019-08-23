@@ -67,13 +67,14 @@ module Localizator =
             | Some r1, Some r2 -> Some (r1, r2)
             | _ -> None               
 
+    let choose2 (l1 : Localizator<_, _>) (l2 : Localizator<_, _>) : Localizator<_, _> =
+        returnL <| fun inp culture ->
+            match l1 inp culture, l2 inp culture with
+            | Some x, _ -> Some x
+            | _, x -> x
+
     let choose (ls : Localizator<_, _> seq) : Localizator<_, _> =
-         returnL <| fun inp culture ->
-            ls
-            |> Seq.map (fun l -> l inp culture)
-            |> Seq.filter Option.isSome
-            |> Seq.tryHead
-            |> Option.flatten
+         Seq.reduce choose2 ls
 
     let transformKey (f : 'b -> 'a) (l : Localizator<_, _>) : Localizator<_, _> =
         f >> l
