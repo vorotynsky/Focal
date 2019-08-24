@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Focal</AssemblyName>
-    <AssemblyVersion>0.0.5.1</AssemblyVersion>
+    <AssemblyVersion>0.0.6.1</AssemblyVersion>
     <Copyright>Copyright 2019 Vorotynsky Maxim</Copyright>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
@@ -11,6 +11,7 @@
     <Compile Include="Localizator.fs" />
     <Compile Include="Localize.fs" />
     <Compile Include="ObjectLocalizator.fs" />
+    <Compile Include="TypeLocalizator.fs" />
     <Compile Include="ResourceLocalizator.fs" />
   </ItemGroup>
 

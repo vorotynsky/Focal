@@ -37,7 +37,7 @@ module Localizator =
     let cultureDependedValue value culture : Localizator<_, _> =
         returnL <| fun _ c -> if culture = c then Some value else None
         
-    let cultureDepemdedFunction f culture : Localizator<_, _> =
+    let cultureDependedFunction f culture : Localizator<_, _> =
         returnL <| fun inp c -> if culture = c then Some (f inp) else None
 
     let bind (f : 'a -> Localizator<_, 'b>) (l : Localizator<_, 'a>) : Localizator<_, 'b> =
