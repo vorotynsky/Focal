@@ -63,7 +63,7 @@ module TypeLocalizator =
             |> Some
 
     let tupleLocalizator<'T> (baseLocalizator : ObjectLocalizator) : SymmetricLocalizator<'T> =
-        if not <| FSharpType.IsRecord (typeof<'T>) then invalidOp "The generic parametr isn't a tuple. "
+        if not <| FSharpType.IsTuple (typeof<'T>) then invalidOp "The generic parametr isn't a tuple. "
         Localizator.returnL <| fun inp culture ->
             FSharpValue.GetTupleFields inp
             |> Array.map (fun x -> baseLocalizator x culture |> Option.get)
