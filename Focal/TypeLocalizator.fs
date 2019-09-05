@@ -38,44 +38,57 @@ module TypeLocalizator =
             ms.Position <- 0L
             formatter.Deserialize(ms) :?> 'a)
 
+    let private iterByPredicate predicate func =
+        let doF p v = if p then func v
+        Seq.map (fun x -> x, (predicate x))
+        >> Seq.fold (fun s (v, p) -> doF p v; p && s) true
+        
+
     let private editProperties (localizeFunc : obj -> obj option) (members : MemberInfo seq) obj  =
         members
         |> Seq.choose (fun x -> if x :? PropertyInfo then Some (x :?> PropertyInfo) else None)
         |> Seq.filter (fun pi -> pi.CanRead && pi.CanWrite)
         |> Seq.map (fun x -> x, (localizeFunc (x.GetValue (obj))))
-        |> Seq.filter (fun (_, v) -> v.IsSome)
-        |> Seq.iter (fun (pi, v) -> pi.SetValue(obj, Option.get v))
+        |> iterByPredicate (fun (_, v) -> v.IsSome) (fun (pi, v) -> pi.SetValue(obj, Option.get v))
 
     let private editFields (localizeFunc : obj -> obj option) (members : MemberInfo seq) obj  =
         members
         |> Seq.choose (fun x -> if x :? FieldInfo then Some (x :?> FieldInfo) else None)
         |> Seq.map (fun x -> x, (localizeFunc (x.GetValue (obj))))
-        |> Seq.filter (fun (_, v) -> v.IsSome)
-        |> Seq.iter (fun (pi, v) -> pi.SetValue(obj, Option.get v))
+        |> iterByPredicate (fun (_, v) -> v.IsSome) (fun (pi, v) -> pi.SetValue(obj, Option.get v))
 
     let recordLocalizator<'T> (baseLoaclizator : ObjectLocalizator) : SymmetricLocalizator<'T> =
         if not <| FSharpType.IsRecord (typeof<'T>) then invalidOp "The generic parameter isn't a record. "
         Localizator.returnL <| fun inp culture ->
-            FSharpValue.GetRecordFields inp
-            |> Array.map (fun x -> baseLoaclizator x culture |> Option.get)
-            |> fun x -> FSharpValue.MakeRecord (typeof<'T>, x)
-            :?> 'T
-            |> Some
+            let values =
+                FSharpValue.GetRecordFields inp
+                |> Array.map (fun x -> baseLoaclizator x culture)
+            if Array.contains None values then None
+            else
+                values
+                |> Array.map Option.get
+                |> fun x -> FSharpValue.MakeRecord (typeof<'T>, x)
+                :?> 'T
+                |> Some
 
     let tupleLocalizator<'T> (baseLocalizator : ObjectLocalizator) : SymmetricLocalizator<'T> =
         if not <| FSharpType.IsTuple (typeof<'T>) then invalidOp "The generic parametr isn't a tuple. "
         Localizator.returnL <| fun inp culture ->
-            FSharpValue.GetTupleFields inp
-            |> Array.map (fun x -> baseLocalizator x culture |> Option.get)
-            |> fun x -> FSharpValue.MakeTuple (x, typeof<'T>)
-            :?> 'T
-            |> Some
+            let values =
+                FSharpValue.GetTupleFields inp
+                |> Array.map (fun x -> baseLocalizator x culture)
+            if Array.contains None values then None
+            else
+                values
+                |> Array.map Option.get
+                |> fun x -> FSharpValue.MakeTuple (x, typeof<'T>)
+                :?> 'T
+                |> Some
 
     let typeLocalizator<'T> (baseLocalizator : ObjectLocalizator) : SymmetricLocalizator<'T> =
         let members = getMembersWithAttribute (new LocalizeAttribute()) typeof<'T>
         Localizator.returnL <| fun inp culture ->
             let func inp = baseLocalizator inp culture
             let newInp = copyObj inp
-            editFields     func members newInp
-            editProperties func members newInp
-            Some newInp
+            let (&&&) f g = fun a b c -> (f a b c) && (g a b c)
+            if (editFields &&& editProperties) func members newInp then Some newInp else None

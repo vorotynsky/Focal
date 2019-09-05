@@ -46,3 +46,18 @@ let ``string & int: success`` () =
 
     Assert.Equal ({ Name ="[LOCALIZED] hello"; Value = 6 }, value)
 
+[<Fact>]
+let ``string & int Localize to undeterminated culture: None``() =
+    let input = { Name = "hello"; Value = 5 }
+    let culture = CultureInfo.CreateSpecificCulture "ru-RU"
+    
+    let localizator =
+        let strLoc = Localizator.cultureDependedFunction (fun x -> "[LOCALIZED] " + x) (CultureInfo.CreateSpecificCulture "en-GB")
+        let intLoc = Localizator.cultureDependedFunction ((+) 1) (CultureInfo.CreateSpecificCulture "en-GB")
+        TypeLocalizator.recordLocalizator (strLoc >+> intLoc)
+
+    let value = localizator input culture
+
+    Assert.Equal (None, value)
+
+
