@@ -14,7 +14,6 @@
 
 namespace Focal
 
-open Focal.ObjectLocalizator
 open FSharp.Reflection
 open System
 open System.IO

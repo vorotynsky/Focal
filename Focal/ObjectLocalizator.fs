@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module Focal.ObjectLocalizator
+namespace Focal
 
 type ObjectLocalizator = SymmetricLocalizator<obj>
 
-let private objFunc (f : 'a -> 'b Option) : (obj -> obj option) =
-    fun arg ->
-        if arg :? 'a then arg :?> 'a |> Some else None
-        |> Option.bind f
-        |> Option.map (fun x -> x :> obj)
+module ObjectLocalizator =
 
-let fromLocalizator<'a, 'b> (localizator : Localizator<'a, 'b>)  : ObjectLocalizator =
-    Localizator.returnL <| fun inp culture ->
-        let func inp = localizator inp culture
-        objFunc func inp
+    let private objFunc (f : 'a -> 'b Option) : (obj -> obj option) =
+        fun arg ->
+            if arg :? 'a then arg :?> 'a |> Some else None
+            |> Option.bind f
+            |> Option.map (fun x -> x :> obj)
 
-let inline choose2 (l1 : Localizator<_, _>) (l2 : Localizator<_, _>) : ObjectLocalizator =
-    Localizator.choose2 (fromLocalizator l1) (fromLocalizator l2)
+    let fromLocalizator<'a, 'b> (localizator : Localizator<'a, 'b>)  : ObjectLocalizator =
+        Localizator.returnL <| fun inp culture ->
+            let func inp = localizator inp culture
+            objFunc func inp
 
-let (>+>) = choose2
+    let inline choose2 (l1 : Localizator<_, _>) (l2 : Localizator<_, _>) : ObjectLocalizator =
+        Localizator.choose2 (fromLocalizator l1) (fromLocalizator l2)
+
+    let (>+>) = choose2
