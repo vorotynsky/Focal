@@ -14,7 +14,6 @@
 
 namespace Focal
 
-open System
 open System.Globalization
 
 type Localizator<'TKey, 'TValue> = 'TKey -> CultureInfo -> 'TValue option
