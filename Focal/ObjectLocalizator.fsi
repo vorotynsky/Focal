@@ -13,13 +13,19 @@
 // limitations under the License.
 
 namespace Focal
-type ObjectLocalizator = SymmetricLocalizator<obj>
-module ObjectLocalizator = begin
-  val private objFunc : f:('a -> Option<'b>) -> arg:obj -> obj option
-  val fromLocalizator : localizator:Localizator<'a,'b> -> ObjectLocalizator
-  val inline choose2 :
-    l1:Localizator<'a,'b> -> l2:Localizator<'c,'d> -> ObjectLocalizator
-  val ( >+> ) :
-    (Localizator<'a,'b> -> Localizator<'c,'d> -> 'e ->
-       System.Globalization.CultureInfo -> obj option)
-end
+
+    /// Symetric localizator with object input and output.
+    type ObjectLocalizator = SymmetricLocalizator<obj>
+
+    module ObjectLocalizator = begin
+
+        /// Converts localizator to object localizator.
+        val fromLocalizator : localizator:Localizator<'a,'b> -> ObjectLocalizator
+
+        /// Chooses between 2 localizators and converts it to object localizator.
+        val inline choose2 :
+            l1:Localizator<'a,'b> -> l2:Localizator<'c,'d> -> ObjectLocalizator
+
+        /// Chose2 operator.
+        val ( >+> ) : Localizator<'a,'b> -> l2:Localizator<'c,'d> -> ObjectLocalizator
+    end

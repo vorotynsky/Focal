@@ -13,13 +13,16 @@
 // limitations under the License.
 
 namespace Focal
-module Resource = begin
-  val private resources : asm:System.Reflection.Assembly -> string []
-  val createLocalizator :
-    resourseManager:System.Resources.ResourceManager ->
-      Localizator<string,string>
-  val createAssembleyLocalizator :
-    assembly:System.Reflection.Assembly -> Localizator<string,string>
-end
+    module Resource = begin
+
+        /// Creates localizator based on resource manager.
+        val createLocalizator :
+            resourseManager:System.Resources.ResourceManager ->
+            Localizator<string,string>
+
+        /// Creates localizator based on resources of assembley.
+        val createAssembleyLocalizator :
+            assembly:System.Reflection.Assembly -> Localizator<string,string>
+    end
 
 

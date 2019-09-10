@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Focal</AssemblyName>
-    <AssemblyVersion>0.1.0.2</AssemblyVersion>
+    <AssemblyVersion>0.1.0.3</AssemblyVersion>
     <Copyright>Copyright 2019 Vorotynsky Maxim</Copyright>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>

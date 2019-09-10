@@ -12,29 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module Focal.Resource
+namespace Focal
 
-open System.Resources
-open System.Reflection
+module Resource =
 
-let private resources (asm : Assembly) =
-    asm.GetManifestResourceNames()
+    open System.Resources
+    open System.Reflection
 
-/// Creates a localizator from `System.Resources.ResourceManager` object.
-let createLocalizator (resourseManager : ResourceManager) : Localizator<string, string> =
-    Localizator.returnL <| fun inp culture ->
-        try
-            resourseManager.GetString(inp, culture) |> Some
-        with
-        | :? MissingManifestResourceException -> None
-        | :? MissingSatelliteAssemblyException -> None
+    let private resources (asm : Assembly) =
+        asm.GetManifestResourceNames()
 
-/// Creates a localizator based on all assembly resources.
-let createAssembleyLocalizator (assembly : Assembly) : Localizator<string, string> =
-    Localizator.returnL <| fun inp culture ->
-        resources assembly
-        |> Seq.map
-            (fun x -> new ResourceManager(x, assembly)
-            >> createLocalizator)
-        |> Localizator.choose
-        <|| (inp, culture)
+    /// Creates a localizator from `System.Resources.ResourceManager` object.
+    let createLocalizator (resourseManager : ResourceManager) : Localizator<string, string> =
+        Localizator.returnL <| fun inp culture ->
+            try
+                resourseManager.GetString(inp, culture) |> Some
+            with
+            | :? MissingManifestResourceException -> None
+            | :? MissingSatelliteAssemblyException -> None
+
+    /// Creates a localizator based on all assembly resources.
+    let createAssembleyLocalizator (assembly : Assembly) : Localizator<string, string> =
+        Localizator.returnL <| fun inp culture ->
+            resources assembly
+            |> Seq.map
+                (fun x -> new ResourceManager(x, assembly)
+                >> createLocalizator)
+            |> Localizator.choose
+            <|| (inp, culture)

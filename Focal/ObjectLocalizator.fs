@@ -32,4 +32,4 @@ module ObjectLocalizator =
     let inline choose2 (l1 : Localizator<_, _>) (l2 : Localizator<_, _>) : ObjectLocalizator =
         Localizator.choose2 (fromLocalizator l1) (fromLocalizator l2)
 
-    let (>+>) = choose2
+    let ( >+> ) l1 l2 : ObjectLocalizator = choose2 l1 l2

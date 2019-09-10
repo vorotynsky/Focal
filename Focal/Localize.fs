@@ -12,50 +12,52 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module Focal.Localize
+namespace Focal
 
-open Focal
-open System.Globalization
+module Localize =
 
-let inline private reverseLocalizator (localizator : Localizator<_, _>) =
-    fun culture inp -> localizator inp culture
+    open Focal
+    open System.Globalization
 
-let toCurrentCulture l =
-    reverseLocalizator l CultureInfo.CurrentCulture
+    let inline private reverseLocalizator (localizator : Localizator<_, _>) =
+        fun culture inp -> localizator inp culture
 
-let toUICulture l =
-    reverseLocalizator l CultureInfo.CurrentUICulture
+    let toCurrentCulture l =
+        reverseLocalizator l CultureInfo.CurrentCulture
 
-let toInvariantCulture l =
-    reverseLocalizator l CultureInfo.InvariantCulture
+    let toUICulture l =
+        reverseLocalizator l CultureInfo.CurrentUICulture
 
-let getCurrentCulture l =
-    toCurrentCulture l >> Option.get
+    let toInvariantCulture l =
+        reverseLocalizator l CultureInfo.InvariantCulture
 
-let getUICulture l =
-    toUICulture l >> Option.get
+    let getCurrentCulture l =
+        toCurrentCulture l >> Option.get
 
-let getInvariantCulture l =
-    toInvariantCulture l >> Option.get
+    let getUICulture l =
+        toUICulture l >> Option.get
 
-let inline private getOrDefault l value = Localizator.choose [l; Localizator.token value]
+    let getInvariantCulture l =
+        toInvariantCulture l >> Option.get
 
-let getOrDefaultCurrentCulture l value =
-    getOrDefault l value |> toCurrentCulture >> Option.get
+    let inline private getOrDefault l value = Localizator.choose [l; Localizator.token value]
 
-let getOrDefaultUICulture l value =
-    getOrDefault l value |> toUICulture >> Option.get
+    let getOrDefaultCurrentCulture l value =
+        getOrDefault l value |> toCurrentCulture >> Option.get
 
-let getOrDefaultInvariantCulture l value =
-    getOrDefault l value |> toInvariantCulture >> Option.get
+    let getOrDefaultUICulture l value =
+        getOrDefault l value |> toUICulture >> Option.get
 
-let inline private getOrToken l = Localizator.choose [l; Localizator.id]
+    let getOrDefaultInvariantCulture l value =
+        getOrDefault l value |> toInvariantCulture >> Option.get
 
-let getOrTokenCurrentCulture l =
-    getOrToken l |> toCurrentCulture >> Option.get
+    let inline private getOrToken l = Localizator.choose [l; Localizator.id]
 
-let getOrTokenUICulture l =
-    getOrToken l |> toUICulture >> Option.get
+    let getOrTokenCurrentCulture l =
+        getOrToken l |> toCurrentCulture >> Option.get
 
-let getOrTokenInvariantCulture l =
-    getOrToken l |> toInvariantCulture >> Option.get
+    let getOrTokenUICulture l =
+        getOrToken l |> toUICulture >> Option.get
+
+    let getOrTokenInvariantCulture l =
+        getOrToken l |> toInvariantCulture >> Option.get

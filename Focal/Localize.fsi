@@ -12,29 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 namespace Focal
-  module Localize = begin
-    val inline private reverseLocalizator :
-      localizator:Localizator<'a,'b> ->
-        culture:System.Globalization.CultureInfo -> inp:'a -> 'b option
-    val toCurrentCulture : l:Localizator<'a,'b> -> ('a -> 'b option)
-    val toUICulture : l:Localizator<'a,'b> -> ('a -> 'b option)
-    val toInvariantCulture : l:Localizator<'a,'b> -> ('a -> 'b option)
-    val getCurrentCulture : l:Localizator<'a,'b> -> ('a -> 'b)
-    val getUICulture : l:Localizator<'a,'b> -> ('a -> 'b)
-    val getInvariantCulture : l:Localizator<'a,'b> -> ('a -> 'b)
-    val inline private getOrDefault :
-      l:Localizator<'a,'b> ->
-        value:'b -> ('a -> System.Globalization.CultureInfo -> 'b option)
-    val getOrDefaultCurrentCulture :
-      l:Localizator<'a,'b> -> value:'b -> ('a -> 'b)
-    val getOrDefaultUICulture : l:Localizator<'a,'b> -> value:'b -> ('a -> 'b)
-    val getOrDefaultInvariantCulture :
-      l:Localizator<'a,'b> -> value:'b -> ('a -> 'b)
-    val inline private getOrToken :
-      l:Localizator<'a,'a> ->
-        ('a -> System.Globalization.CultureInfo -> 'a option)
-    val getOrTokenCurrentCulture : l:Localizator<'a,'a> -> ('a -> 'a)
-    val getOrTokenUICulture : l:Localizator<'a,'a> -> ('a -> 'a)
-    val getOrTokenInvariantCulture : l:Localizator<'a,'a> -> ('a -> 'a)
-  end
+    module Localize = begin
+
+        /// Applies current culture to localizator.
+        val toCurrentCulture    : l:Localizator<'a,'b> -> ('a -> 'b option)
+        /// Applies UI culture to localizator.
+        val toUICulture         : l:Localizator<'a,'b> -> ('a -> 'b option)
+        /// Applies invariant culture to localizator.
+        val toInvariantCulture  : l:Localizator<'a,'b> -> ('a -> 'b option)
+
+        /// Applies current culture to localizator and gets its result.
+        val getCurrentCulture   : l:Localizator<'a,'b> -> ('a -> 'b)
+        /// Applies UI culture to localizator and gets its result.
+        val getUICulture        : l:Localizator<'a,'b> -> ('a -> 'b)
+        /// Applies invariant culture to localizator and gets its result.
+        val getInvariantCulture : l:Localizator<'a,'b> -> ('a -> 'b)
+
+        /// Returns result of localizator or default value if localizator coudn't return.
+        val getOrDefaultCurrentCulture   : l:Localizator<'a,'b> -> value:'b -> ('a -> 'b)
+        /// Returns result of localizator or default value if localizator coudn't return.
+        val getOrDefaultUICulture        : l:Localizator<'a,'b> -> value:'b -> ('a -> 'b)
+        /// Returns result of localizator or default value if localizator coudn't return.
+        val getOrDefaultInvariantCulture : l:Localizator<'a,'b> -> value:'b -> ('a -> 'b)
+
+        /// Returns result of localizator or input value if localizator coudn't return.
+        val getOrTokenCurrentCulture     : l:SymmetricLocalizator<'a> -> ('a -> 'a)
+        /// Returns result of localizator or input value if localizator coudn't return.
+        val getOrTokenUICulture          : l:SymmetricLocalizator<'a> -> ('a -> 'a)
+        /// Returns result of localizator or input value if localizator coudn't return.
+        val getOrTokenInvariantCulture   : l:SymmetricLocalizator<'a> -> ('a -> 'a)
+    end

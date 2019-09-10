@@ -13,27 +13,24 @@
 // limitations under the License.
 
 namespace Focal
-type LocalizeAttribute =
-  class
-    inherit System.Attribute
-    new : unit -> LocalizeAttribute
-  end
-module TypeLocalizator = begin
-  val private getMembersWithAttribute :
-    atr:System.Attribute -> t:System.Type -> seq<System.Reflection.MemberInfo>
-  val private copyObj : obj:'a -> 'a
-  val private iterByPredicate :
-    predicate:('a -> bool) -> func:('a -> unit) -> (seq<'a> -> bool)
-  val private editProperties :
-    localizeFunc:(obj -> obj option) ->
-      members:seq<System.Reflection.MemberInfo> -> obj:'a -> bool
-  val private editFields :
-    localizeFunc:(obj -> obj option) ->
-      members:seq<System.Reflection.MemberInfo> -> obj:'a -> bool
-  val recordLocalizator :
-    baseLoaclizator:ObjectLocalizator -> SymmetricLocalizator<'T>
-  val tupleLocalizator :
-    baseLocalizator:ObjectLocalizator -> SymmetricLocalizator<'T>
-  val typeLocalizator :
-    baseLocalizator:ObjectLocalizator -> SymmetricLocalizator<'T>
-end
+
+    /// The Attribute for mark properties and fields for localization.
+    type LocalizeAttribute =
+        class
+            inherit System.Attribute
+            new : unit -> LocalizeAttribute
+        end
+
+    module TypeLocalizator = begin
+
+        /// Creates localizator for record type based on existing localizator.
+        val recordLocalizator : baseLoaclizator:ObjectLocalizator -> SymmetricLocalizator<'T>
+
+        /// Creates localizator for tuple based on existing localizator.
+        val tupleLocalizator : baseLocalizator:ObjectLocalizator -> SymmetricLocalizator<'T>
+
+        /// Creates localizator for type based on existing localizator.
+        ///
+        /// Localize only fields and properties with `LocalizeAttribute`.
+        val typeLocalizator : baseLocalizator:ObjectLocalizator -> SymmetricLocalizator<'T>
+    end
