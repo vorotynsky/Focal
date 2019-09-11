@@ -13,6 +13,8 @@
 // limitations under the License.
 
 namespace Focal
+
+    [<RequireQualifiedAccessAttribute>]
     module Resource = begin
 
         /// Creates localizator based on resource manager.

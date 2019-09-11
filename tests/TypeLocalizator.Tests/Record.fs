@@ -16,8 +16,8 @@ module RecordLocalizator
 
 open System.Globalization
 open Focal
+open Focal.Operators
 open Xunit
-open Focal.ObjectLocalizator
 
 type 'a Point = { X : 'a; Y : 'a } 
 type 'a NamedValue = { Name : string; Value : 'a } 

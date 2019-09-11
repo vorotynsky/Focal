@@ -15,12 +15,14 @@
 namespace Focal
 
     /// The Attribute for mark properties and fields for localization.
+    [<System.AttributeUsage(System.AttributeTargets.Property ||| System.AttributeTargets.Field)>]
     type LocalizeAttribute =
         class
             inherit System.Attribute
             new : unit -> LocalizeAttribute
         end
 
+    [<RequireQualifiedAccessAttribute>]
     module TypeLocalizator = begin
 
         /// Creates localizator for record type based on existing localizator.

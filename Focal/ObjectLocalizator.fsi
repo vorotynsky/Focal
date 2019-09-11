@@ -17,6 +17,7 @@ namespace Focal
     /// Symetric localizator with object input and output.
     type ObjectLocalizator = SymmetricLocalizator<obj>
 
+    [<RequireQualifiedAccessAttribute>]
     module ObjectLocalizator = begin
 
         /// Converts localizator to object localizator.
@@ -26,6 +27,11 @@ namespace Focal
         val inline choose2 :
             l1:Localizator<'a,'b> -> l2:Localizator<'c,'d> -> ObjectLocalizator
 
+    end
+
+    module Operators = begin
+
         /// Chose2 operator.
         val ( >+> ) : Localizator<'a,'b> -> l2:Localizator<'c,'d> -> ObjectLocalizator
+
     end

@@ -20,6 +20,7 @@ namespace Focal
     /// A loclizator with same key and value types.
     type SymmetricLocalizator<'T> = Localizator<'T,'T>
 
+    [<RequireQualifiedAccessAttribute>]
     module Localizator = begin
 
         val inline internal returnL : x:Localizator<'a,'b> -> Localizator<'a,'b>

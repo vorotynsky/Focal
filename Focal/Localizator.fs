@@ -19,6 +19,7 @@ open System.Globalization
 type Localizator<'TKey, 'TValue> = 'TKey -> CultureInfo -> 'TValue option
 type SymmetricLocalizator<'T> = Localizator<'T, 'T>
 
+[<RequireQualifiedAccessAttribute>]
 module Localizator =
 
     /// function for hiliting support

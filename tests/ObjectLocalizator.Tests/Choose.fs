@@ -16,8 +16,8 @@ module Choose
 
 open System.Globalization
 open Focal
+open Focal.Operators
 open Xunit
-open Focal.ObjectLocalizator
 
 let multyTypeLocalizator() : ObjectLocalizator =
     let strLoc = Localizator.cultureDependedFunction (fun x -> "[LOCALIZED] " + x) CultureInfo.InvariantCulture

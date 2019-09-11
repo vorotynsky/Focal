@@ -14,6 +14,7 @@
 
 namespace Focal
 
+[<RequireQualifiedAccessAttribute>]
 module Resource =
 
     open System.Resources

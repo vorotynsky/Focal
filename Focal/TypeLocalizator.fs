@@ -21,8 +21,10 @@ open System.Reflection
 open System.Runtime.Serialization.Formatters.Binary
 open System.Runtime.Serialization
 
+[<AttributeUsage(AttributeTargets.Property ||| AttributeTargets.Field)>]
 type LocalizeAttribute() = inherit Attribute()
 
+[<RequireQualifiedAccessAttribute>]
 module TypeLocalizator = 
 
     let private getMembersWithAttribute atr (t : Type) = 

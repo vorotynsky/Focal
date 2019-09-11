@@ -16,6 +16,7 @@ namespace Focal
 
 type ObjectLocalizator = SymmetricLocalizator<obj>
 
+[<RequireQualifiedAccessAttribute>]
 module ObjectLocalizator =
 
     let private objFunc (f : 'a -> 'b Option) : (obj -> obj option) =
@@ -32,4 +33,5 @@ module ObjectLocalizator =
     let inline choose2 (l1 : Localizator<_, _>) (l2 : Localizator<_, _>) : ObjectLocalizator =
         Localizator.choose2 (fromLocalizator l1) (fromLocalizator l2)
 
-    let ( >+> ) l1 l2 : ObjectLocalizator = choose2 l1 l2
+module Operators =
+    let ( >+> ) l1 l2 : ObjectLocalizator = ObjectLocalizator.choose2 l1 l2
