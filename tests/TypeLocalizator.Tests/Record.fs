@@ -61,3 +61,16 @@ let ``string & int Localize to undeterminated culture: None``() =
     Assert.Equal (None, value)
 
 
+[<Fact>]
+let ``string & int localize with the missing localzator: None`` () =
+    let input = { Name = "hello"; Value = 5}
+    let localizator =
+        Localizator.cultureDependedFunction (fun x -> "[LOCALIZED] " + x) (CultureInfo.InvariantCulture)
+        |> ObjectLocalizator.fromLocalizator
+        |> TypeLocalizator.recordLocalizator
+
+    let value = input |> Localize.toInvariantCulture localizator
+
+    Assert.Equal (None, value)
+
+
