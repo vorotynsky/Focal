@@ -16,8 +16,8 @@ module TupleLocalizator
 
 open System.Globalization
 open Focal
+open Focal.Operators
 open Xunit
-open Focal.ObjectLocalizator
 
 [<Fact>]
 let ``int pair: success``() =

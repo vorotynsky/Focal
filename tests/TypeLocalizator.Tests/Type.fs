@@ -17,8 +17,8 @@ module TypeLocalizator
 
 open System.Globalization
 open Focal
+open Focal.Operators
 open Xunit
-open Focal.ObjectLocalizator
 
 type 'a NamedValue(name : string, value : 'a) =
     [<Localize>] member val Name = name with get, set
